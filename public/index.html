@@ -5,10 +5,22 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <title>Pokemon TCG Database</title>
 </head>
-<body class="relative min-h-screen overflow-hidden">
-    <div class="absolute inset-0 bg-cover bg-center z-0" style="background-image: url('Golden-Retriever-head-portrait-outdoors.jpg');"></div>
-    <h1 class="text-3xl font-bold text-white drop-shadow">Pokémon Card Search</h1>
-     <button>Click Here to Generate</button>
-     <div id="card" class="text-center text-white drop-shadow"></div>
+<body class="h-screen overflow-hidden m-0">
+    <div class="absolute inset-0 bg-cover bg-center z-0 h-[100vh]" style="background-image: url(/pokeSearch/public/Pokemon-Guess.jpg); filter:opacity(30%);"></div>
+    <div>
+        <nav class="font-semibold">
+            <ul>
+                <li><a href="#" class="hover:text-emerald-300">Home</a></li>
+                <li>About</li>
+                <li>Collection</li>
+                <li>Pokemon Sets</li>
+                <li>Deck Builder</li>
+            </ul>
+        </nav>
+    </div>
+    <div class="h-screen flex flex-col items-center justify-center space-y-4">
+        <h1 class="text-5xl font-bold drop-shadow-xl drop-shadow-black text-yellow-400">Pokémon Card Generator</h1>
+        <button class="bg-emerald-500 font-semibold text-slate-50 drop-shadow-lg drop-shadow-black px-2 py-1 rounded hover:bg-sky-700 active:bg-blue-800">Click to Generate</button>
+    </div>
 </body>
 </html>
