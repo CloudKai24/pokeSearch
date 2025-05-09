@@ -25,6 +25,32 @@
         
     </div>
     </div>
+
+    <script>
+        async function getRandomCard() {
+          try {
+            const res = await fetch('/api/random-card');
+            const card = await res.json();
+    
+            if (card.error || !card.images?.large) {
+              document.getElementById('card').innerHTML = `
+                <p class="text-red-400 font-semibold">No image found. Try again!</p>
+              `;
+              return;
+            }
+    
+            document.getElementById('card').innerHTML = `
+              <h2 class="text-xl font-semibold mt-4">${card.name}</h2>
+              <img src="${card.images.large}" alt="${card.name}" class="mx-auto mt-2 w-80 rounded shadow-md">
+            `;
+          } catch (err) {
+            console.error(err);
+            document.getElementById('card').innerHTML = `
+              <p class="text-red-400 font-semibold">Something went wrong. Try again.</p>
+            `;
+          }
+        }
+      </script>
 </body>
 
 </html>
