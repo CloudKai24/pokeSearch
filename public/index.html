@@ -7,50 +7,62 @@
 </head>
 <body class="h-screen overflow-hidden m-0">
     <div class="absolute inset-0 bg-cover bg-center z-0 h-[100vh]" style="background-image: url(/pokeSearch/public/Pokemon-Guess.jpg); filter:opacity(30%);"></div>
-    <div>
-        <nav class="relative font-semibold">
-            <ul class="flex space-x-6 justify-center p-2">
-                <li><a href="index.html" class="hover:text-yellow-400">Home</a></li>
-                <li><a href="about.html" class="hover:text-yellow-400">About</a></li>
-                <li><a href="collection.html" class="hover:text-yellow-400">Collection</a></li>
-                <li><a href="sets.html" class="hover:text-yellow-400">Pokemon Sets</a></li>
-                <li><a href="builder.html" class="hover:text-yellow-400">Deck Builder</a></li>
-            </ul>
-        </nav>
-    </div>
+    
+    <nav class="relative font-semibold">
+        <ul class="flex space-x-6 justify-center p-2">
+            <li><a href="index.html" class="hover:text-yellow-400">Home</a></li>
+            <li><a href="about.html" class="hover:text-yellow-400">About</a></li>
+            <li><a href="collection.html" class="hover:text-yellow-400">Collection</a></li>
+            <li><a href="sets.html" class="hover:text-yellow-400">Pokemon Sets</a></li>
+            <li><a href="builder.html" class="hover:text-yellow-400">Deck Builder</a></li>
+        </ul>
+    </nav>
+
     <div class="h-screen flex flex-col items-center justify-center space-y-4">
-        <h1 class="text-5xl font-bold drop-shadow-xl drop-shadow-black text-yellow-400">Pokémon Card Generator</h1>
-        <button class="bg-emerald-500 font-semibold text-slate-50 drop-shadow-lg drop-shadow-black px-2 py-1 rounded hover:bg-sky-700 active:bg-blue-800">Click to Generate</button>
-    <div id="card" class="drop-shadow-xl drop-shadow-black">
-        
-    </div>
+        <h1 class="text-5xl font-bold drop-shadow-xl text-yellow-400">Pokémon Card Generator</h1>
+        <button id="generate-btn" class="bg-emerald-500 font-semibold text-slate-50 drop-shadow-lg px-4 py-2 rounded hover:bg-sky-700 active:bg-blue-800">
+            Click to Generate
+        </button>
+        <div id="card" class="text-center space-y-2 text-white"></div>
     </div>
 
     <script>
-        async function getRandomCard() {
-          try {
-            const res = await fetch('/api/random-card');
-            const card = await res.json();
-    
-            if (card.error || !card.images?.large) {
-              document.getElementById('card').innerHTML = `
-                <p class="text-red-400 font-semibold">No image found. Try again!</p>
-              `;
-              return;
-            }
-    
-            document.getElementById('card').innerHTML = `
-              <h2 class="text-xl font-semibold mt-4">${card.name}</h2>
-              <img src="${card.images.large}" alt="${card.name}" class="mx-auto mt-2 w-80 rounded shadow-md">
-            `;
-          } catch (err) {
-            console.error(err);
-            document.getElementById('card').innerHTML = `
-              <p class="text-red-400 font-semibold">Something went wrong. Try again.</p>
-            `;
-          }
-        }
-      </script>
-</body>
+        const apiKey = 'YOUR_API_KEY_HERE'; // Replace with your real API key
 
+        async function getRandomCard() {
+            const randomPage = Math.floor(Math.random() * 100) + 1; // Random page number (1-100)
+            const pageSize = 1; // One card per page for randomness
+            const url = `https://api.pokemontcg.io/v2/cards?page=${randomPage}&pageSize=${pageSize}`;
+
+            try {
+                const response = await fetch(url, {
+                    headers: { 'X-Api-Key': apiKey }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Response status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const card = data.data[0];
+
+                if (card) {
+                    const cardDiv = document.getElementById('card');
+                    cardDiv.innerHTML = `
+                        <h2 class="text-3xl font-bold">${card.name}</h2>
+                        <img src="${card.images.small}" alt="${card.name}" class="mx-auto rounded shadow-lg max-h-96">
+                        <p class="italic text-sm text-black">Card Type: ${card.types}</p>
+                        <p class="italic text-sm text-black">Card Artist: ${card.artist}</p>
+                    `;
+                } else {
+                    console.error('No card found');
+                }
+            } catch (error) {
+                console.error('Error fetching card:', error.message);
+            }
+        }
+
+        document.getElementById('generate-btn').addEventListener('click', getRandomCard);
+    </script>
+</body>
 </html>
